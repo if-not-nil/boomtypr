@@ -6,13 +6,13 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 
-	"github.com/jedib0t/go-pretty/v6/text"
+	"github.com/muesli/reflow/wordwrap"
 	"github.com/yagnikpt/boomtypr/internal/typing"
 	"github.com/yagnikpt/boomtypr/internal/utils"
 )
 
 var (
-	frameStyles        = lipgloss.NewStyle().Padding(2, 10)
+	frameStyles        = lipgloss.NewStyle().Padding(2, 30)
 	pendingCharStyle   = lipgloss.NewStyle().Foreground(lipgloss.Color("#4C4C4C"))
 	incorrectCharStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("9")).Underline(true)
 	cursorStyle        = lipgloss.NewStyle().Background(lipgloss.Color("7")).Foreground(lipgloss.Color("0"))
@@ -45,8 +45,8 @@ func NewModel(words []string) Model {
 	joinedWords := strings.Join(words, " ")
 	termWidth, _, _ := GetTermDimensions()
 	frameX, _ := frameStyles.GetFrameSize()
-	wrappedPara := text.WrapSoft(joinedWords, termWidth-frameX)
-	// fmt.Println(wrappedPara)
+	wrappedPara := wordwrap.String(joinedWords, termWidth-frameX)
+	// fmt.Printf("%q", wrappedPara)
 	lineBreaks := utils.LineBreakIndexes(wrappedPara)
 	lines := make([]Line, utils.CountLines(wrappedPara))
 	linesFromPara := utils.SplitIntoLines(wrappedPara)
@@ -116,7 +116,11 @@ func (m Model) View() string {
 			if charIndex == m.Engine.CurrentChar {
 				rendered = cursorStyle.Render(rendered)
 			}
+
 			b.WriteString(rendered)
+		}
+		if m.Engine.CurrentChar == line.Start+len(line.Text) {
+			b.WriteString(cursorStyle.Render(" "))
 		}
 		b.WriteString("\n")
 	}

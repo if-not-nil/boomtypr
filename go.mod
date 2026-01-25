@@ -5,7 +5,7 @@ go 1.24.0
 require (
 	github.com/charmbracelet/bubbletea v1.3.10
 	github.com/charmbracelet/lipgloss v1.1.0
-	github.com/jedib0t/go-pretty/v6 v6.7.8
+	github.com/muesli/reflow v0.3.0
 	golang.org/x/term v0.39.0
 )
 

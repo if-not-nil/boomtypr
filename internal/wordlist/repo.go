@@ -1,5 +1,10 @@
 package wordlist
 
+import (
+	"fmt"
+	"strings"
+)
+
 var Words = []string{
 	"the", "quick", "brown", "fox", "jumps", "over", "lazy", "dog",
 	"hello", "world", "programming", "keyboard", "computer", "screen",
@@ -21,4 +26,11 @@ var Words = []string{
 	"simple", "complex", "easy", "difficult", "basic", "advanced", "expert",
 	"alpha", "beta", "gamma", "delta", "epsilon", "zeta", "theta",
 	"pizza", "pasta", "salad", "soup", "sandwich", "burger", "fries",
+}
+
+func DebugWords() {
+	text := strings.Join(Words, " ")
+	for i, char := range text {
+		fmt.Printf("%d%c ", i, char)
+	}
 }

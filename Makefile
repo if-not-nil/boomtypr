@@ -1,11 +1,14 @@
 BINARY_NAME=boomtypr
 GO=go
+LDFLAGS := -s -w \
+  -X main.version=$(VERSION) \
+  -X main.commit=$(shell git rev-parse --short HEAD)
 
 # all: build
-all: run
+all: build
 
 build:
-	$(GO) build -o $(BINARY_NAME) .
+	CGO_ENABLED=0 $(GO) build -o $(BINARY_NAME) -ldflags "$(LDFLAGS)" .
 
 run:
 	$(GO) run .

@@ -47,7 +47,7 @@ func (e *Engine) TypeChar(char rune) {
 	if e.LineBreaks[e.CurrentLine] == e.CurrentChar && string(char) != " " {
 		return
 	}
-	if e.CurrentChar < len(e.Text) && e.LineBreaks[e.CurrentLine] == e.CurrentChar {
+	if e.CurrentChar < len(e.Text) && e.CurrentChar == e.LineBreaks[e.CurrentLine] {
 		e.CurrentLine++
 		e.Cursor = 0
 	} else {
