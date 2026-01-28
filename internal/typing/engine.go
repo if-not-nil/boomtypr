@@ -2,7 +2,6 @@ package typing
 
 import (
 	"sort"
-	"time"
 )
 
 type CharState int
@@ -19,19 +18,15 @@ type Engine struct {
 	CurrentLine int
 	LineBreaks  []int
 	Track       []CharState
-	StartTime   time.Time
-	Started     bool
 	Finished    bool
 }
 
 func NewEngine(text string, lineBreaks []int) *Engine {
 	track := make([]CharState, len(text))
 	return &Engine{
-		Text:        text,
-		LineBreaks:  lineBreaks,
-		Track:       track,
-		CurrentChar: 0,
-		CurrentLine: 0,
+		Text:       text,
+		LineBreaks: lineBreaks,
+		Track:      track,
 	}
 }
 
@@ -79,10 +74,6 @@ func (e *Engine) UpdateLines(newLines []int) {
 
 	detla := newCurrentLineIndex - e.CurrentLine
 	e.CurrentLine += detla
-}
-
-func (e *Engine) NextWord() {
-	// TODO: implement
 }
 
 func (e *Engine) Reset() {

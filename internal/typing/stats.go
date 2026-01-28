@@ -2,43 +2,57 @@ package typing
 
 import "time"
 
-// Stats tracks typing test statistics.
 type Stats struct {
 	StartTime    time.Time
 	EndTime      time.Time
 	TotalChars   int
 	CorrectChars int
-	TotalWords   int
+	Errors       int
 }
 
-// NewStats creates a new Stats instance.
 func NewStats() *Stats {
 	return &Stats{}
 }
 
-// Start begins tracking stats.
+func (s *Stats) Calculate(keys []Keystroke, endTime time.Time) {
+	correct := 0
+	incorrect := 0
+
+	s.EndTime = endTime
+	for _, k := range keys {
+		if k.Backspace {
+			continue
+		}
+
+		if k.Correct {
+			correct++
+		} else {
+			incorrect++
+		}
+	}
+
+	s.TotalChars = len(keys)
+	s.CorrectChars = correct
+	s.Errors = incorrect
+}
+
 func (s *Stats) Start() {
-	// TODO: implement
+	s.StartTime = time.Now()
 }
 
-// Stop ends tracking stats.
 func (s *Stats) Stop() {
-	// TODO: implement
+	s.EndTime = time.Now()
 }
 
-// WPM calculates words per minute.
 func (s *Stats) WPM() float64 {
-	// TODO: implement
-	return 0
+	duration := s.EndTime.Sub(s.StartTime).Minutes()
+	return float64(s.CorrectChars) / 5.0 / duration
 }
 
-// Accuracy calculates typing accuracy percentage.
 func (s *Stats) Accuracy() float64 {
-	// TODO: implement
-	return 0
+	return float64(s.CorrectChars) / float64(s.TotalChars) * 100
 }
 
-// Reset resets all stats.
 func (s *Stats) Reset() {
-	// TODO: implement
+	*s = Stats{}
 }

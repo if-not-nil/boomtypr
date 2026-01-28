@@ -5,13 +5,12 @@ import "time"
 type Model struct {
 	// test config
 	Mode     Mode
-	Target   []rune        // full text to type
-	Duration time.Duration // for time mode
+	Target   []rune
+	Duration time.Duration
 
 	// runtime state
 	StartedAt time.Time
 	EndedAt   time.Time
-	Index     int // cursor position in Target
 	Done      bool
 
 	// input tracking
