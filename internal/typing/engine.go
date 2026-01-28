@@ -1,6 +1,7 @@
 package typing
 
 import (
+	"sort"
 	"time"
 )
 
@@ -16,7 +17,6 @@ type Engine struct {
 	Text        string
 	CurrentChar int
 	CurrentLine int
-	Cursor      int
 	LineBreaks  []int
 	Track       []CharState
 	StartTime   time.Time
@@ -30,7 +30,6 @@ func NewEngine(text string, lineBreaks []int) *Engine {
 		Text:        text,
 		LineBreaks:  lineBreaks,
 		Track:       track,
-		Cursor:      0,
 		CurrentChar: 0,
 		CurrentLine: 0,
 	}
@@ -49,9 +48,6 @@ func (e *Engine) TypeChar(char rune) {
 	}
 	if e.CurrentChar < len(e.Text) && e.CurrentChar == e.LineBreaks[e.CurrentLine] {
 		e.CurrentLine++
-		e.Cursor = 0
-	} else {
-		e.Cursor++
 	}
 	if string(char) == string(e.Text[e.CurrentChar]) {
 		e.Track[e.CurrentChar] = CharCorrect
@@ -70,11 +66,19 @@ func (e *Engine) Backspace() {
 	}
 	if e.CurrentLine > 0 && e.CurrentChar == e.LineBreaks[e.CurrentLine-1]+1 {
 		e.CurrentLine--
-		e.Cursor = 0
 	}
 	e.CurrentChar--
-	e.Cursor--
 	e.Track[e.CurrentChar] = CharPending
+}
+
+func (e *Engine) UpdateLines(newLines []int) {
+	e.LineBreaks = newLines
+	newCurrentLineIndex := sort.Search(len(newLines), func(i int) bool {
+		return newLines[i] > e.CurrentChar
+	})
+
+	detla := newCurrentLineIndex - e.CurrentLine
+	e.CurrentLine += detla
 }
 
 func (e *Engine) NextWord() {

@@ -34,15 +34,12 @@ type Line struct {
 }
 
 type Model struct {
-	Text          string
-	State         UIState
-	Engine        *typing.Engine
-	Lines         []Line
-	Width         int
-	Height        int
-	CursorVisible bool
-	Blinking      bool
-	BlinkID       int
+	Text   string
+	State  UIState
+	Engine *typing.Engine
+	Lines  []Line
+	Width  int
+	Height int
 }
 
 func NewModel(words []string) Model {
@@ -53,45 +50,35 @@ func NewModel(words []string) Model {
 	lineBreaks := utils.LineBreakIndexes(wrappedPara)
 
 	return Model{
-		Text:     joinedWords,
-		State:    StateMenu,
-		Lines:    GetLinesFromWrappedText(wrappedPara),
-		Engine:   typing.NewEngine(joinedWords, lineBreaks),
-		Blinking: true,
+		Text:   joinedWords,
+		State:  StateMenu,
+		Lines:  GetLinesFromWrappedText(wrappedPara),
+		Engine: typing.NewEngine(joinedWords, lineBreaks),
 	}
 }
 
 func (m Model) Init() tea.Cmd {
-	return blinkCmd()
+	return nil
 }
 
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
-	case blinkMsg:
-		if m.Blinking {
-			m.CursorVisible = !m.CursorVisible
-			return m, blinkCmd()
-		}
-		return m, nil
-
-	case resumeBlinkMsg:
-		if msg.id != m.BlinkID {
-			return m, nil
-		}
-		m.Blinking = true
-		return m, blinkCmd()
-
 	case tea.WindowSizeMsg:
 		frameStyles = frameStyles.Padding(2, CalcHorizontalPadding())
 		frameX, _ := frameStyles.GetFrameSize()
 		wrappedPara := wordwrap.String(m.Text, msg.Width-frameX)
 		m.Lines = GetLinesFromWrappedText(wrappedPara)
+		newLineBreaks := make([]int, len(m.Lines)-1)
+		for i, lines := range m.Lines {
+			if i != len(m.Lines)-1 {
+				newLineBreaks[i] = lines.Start + len(lines.Text)
+			}
+		}
+		m.Engine.UpdateLines(newLineBreaks)
 		m.Width = msg.Width
 		m.Height = msg.Height
 
 	case tea.KeyMsg:
-		m.Blinking = false
-		m.CursorVisible = true
 		switch msg.String() {
 		case "ctrl+c":
 			return m, tea.Quit
@@ -103,8 +90,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		}
 
-		m.BlinkID++
-		return m, resumeBlinkCmd(m.BlinkID)
+		return m, nil
 	}
 
 	return m, nil
@@ -128,13 +114,12 @@ func (m Model) View() string {
 				rendered = incorrectCharStyle.Render(rendered)
 			}
 
-			if charIndex == m.Engine.CurrentChar && m.CursorVisible {
-				rendered = cursorStyle.Render(rendered)
+			if charIndex == m.Engine.CurrentChar {
+				rendered = cursorStyle.Render(string(char))
 			}
-
 			b.WriteString(rendered)
 		}
-		if m.Engine.CurrentChar == line.Start+len(line.Text) && m.CursorVisible {
+		if m.Engine.CurrentChar == line.Start+len(line.Text) {
 			b.WriteString(cursorStyle.Render(" "))
 		}
 		b.WriteString("\n")
