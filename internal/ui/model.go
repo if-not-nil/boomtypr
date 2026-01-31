@@ -17,7 +17,7 @@ var (
 	frameStyles        = lipgloss.NewStyle().Padding(2, CalcHorizontalPadding())
 	pendingCharStyle   = lipgloss.NewStyle().Foreground(lipgloss.Color("8")) // grey
 	correctCharStyle   = lipgloss.NewStyle().Bold(true)
-	incorrectCharStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("9")).Underline(true) // red
+	incorrectCharStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("9")).Bold(true).Underline(true) // red
 	cursorStyle        = lipgloss.NewStyle().Background(lipgloss.Color("7")).Foreground(lipgloss.Color("0"))
 	helperStats        = lipgloss.NewStyle().Foreground(lipgloss.Color("4")) // blue
 )

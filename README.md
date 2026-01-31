@@ -37,7 +37,11 @@ boomtypr
 - [x] Configurable word count and test duration
 - [ ] Multiple word lists
 - [x] Test restart functionality
-- [ ] word erase (ctrl+w / ctlr+backspace)
+- [ ] Word erase (ctrl+w / ctlr+backspace)
+- [ ] Realtime stats display / better stats
+
+## Inspiration
+The UI and flow is inspired by [ashish0kumar/typtea](https://github.com/ashish0kumar/typtea)
 
 ## License
 
