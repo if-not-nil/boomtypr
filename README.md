@@ -1,6 +1,7 @@
 # boomtypr
 
 A minimal terminal-based typing test built with Go and [Bubble Tea](https://github.com/charmbracelet/bubbletea).
+![Typing Screen](./assets/screen.webp)
 
 ## Features
 
@@ -12,11 +13,19 @@ A minimal terminal-based typing test built with Go and [Bubble Tea](https://gith
 
 ## Install
 
+### Homebrew
+
+```bash
+brew install yagnikpt/tap/boomtypr
+```
+
+### Go
+
 ```bash
 go install github.com/yagnikpt/boomtypr@latest
 ```
 
-Or build from source:
+### Build from source
 
 ```bash
 git clone https://github.com/yagnikpt/boomtypr.git
