@@ -1,3 +1,5 @@
 debug.log
 boomtypr
 *.tape
+# Added by goreleaser init:
+dist/

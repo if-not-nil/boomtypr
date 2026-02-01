@@ -134,7 +134,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.Engine.Text = text
 				m.Engine.Track = make([]typing.CharState, len(text))
 			}
-		case "up":
+		case "up", "right":
 			if m.State == StateMenu {
 				switch m.Mode {
 				case typing.ModeTime:
@@ -151,7 +151,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.Engine.Text = text
 				m.Engine.Track = make([]typing.CharState, len(text))
 			}
-		case "down":
+		case "down", "left":
 			if m.State == StateMenu {
 				switch m.Mode {
 				case typing.ModeTime:

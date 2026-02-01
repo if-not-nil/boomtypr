@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -13,11 +14,41 @@ import (
 	"github.com/yagnikpt/boomtypr/internal/wordlist"
 )
 
+var version = "dev"
+
 func main() {
-	dir, _ := os.Getwd()
-	logFile := filepath.Join(dir, "debug.log")
-	fLog, _ := os.OpenFile(logFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	log.SetOutput(fLog)
+	var showVersion bool
+	var showHelp bool
+
+	flag.BoolVar(&showVersion, "version", false, "show version number")
+	flag.BoolVar(&showVersion, "v", false, "show version number (shorthand)")
+
+	flag.BoolVar(&showHelp, "help", false, "show help text")
+	flag.BoolVar(&showHelp, "h", false, "show help text (shorthand)")
+
+	flag.Usage = func() {
+		fmt.Println("A terminal-based typing speed test.\n\nUsage: boomtypr\n\nTUI Keybinds:\n- tab: Toggle Modes\n- up/right: Increase time/words\n- down/left: Decrease time/words\n- esc: Quit")
+	}
+
+	flag.Parse()
+
+	if showVersion {
+		fmt.Println(version)
+		return
+	}
+
+	if showHelp {
+		flag.Usage()
+		return
+	}
+
+	if version == "dev" {
+		dir, _ := os.Getwd()
+		logFile := filepath.Join(dir, "debug.log")
+		fLog, _ := os.OpenFile(logFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+		log.SetOutput(fLog)
+	}
+
 	wl := wordlist.New()
 	p := tea.NewProgram(ui.NewModel(wl, typing.ModeTime, 30*time.Second, 50), tea.WithAltScreen())
 
